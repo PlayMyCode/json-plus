@@ -1,10 +1,114 @@
 ﻿<!DOCTYPE html>
 
 <style>
+    html, body {
+        min-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    body {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        padding: 9px 21px;
+    }
+    .data-area {
+        width: 32%;
+        float: left;
+        clear: none;
 
+        margin: 0 1%;
+    }
+    .data-area:first-of-type {
+        margin-left: 0;
+        clear: left;
+    }
+    .data-area:last-of-type {
+        margin-right: 0;
+        clear: right;
+    }
+        h2 {
+            font: 100 24px arial;
+            margin: 15px 0 3px 0;
+        }
+        textarea {
+            width: 100%;
+            height: 600px;
+        }
+    .data-run {
+        width:  60px;
+        height: 60px;
+
+        text-align: center;
+
+        font: 100 18px arial;
+        line-height: 60px;
+        vertical-align: middle;
+
+        background: #0094ff;
+        color: #fff;
+
+        float: left;
+        clear: both;
+    }
 </style>
+
+<a class="data-run" onclick="runData(); return false;">Run</a>
+
+<div class="data-area">
+    <h2>Data In</h2>
+    <textarea class="js-data-in">
+{
+    "firstName": "John",
+    "lastName": "Smith",
+    "age": 25,
+    "address": {
+        "streetAddress": "21 2nd Street",
+        "city": "New York",
+        "state": "NY",
+        "postalCode": "10021"
+    },
+    "phoneNumber": [
+        {
+            "type": "home",
+            "number": "212 555-1234"
+        },
+        {
+            "type": "fax",
+            "number": "646 555-4567"
+        }
+    ]
+}
+    </textarea>
+</div>
+<div class="data-area">
+    <h2>Data Middle</h2>
+    <textarea class="js-data-middle"></textarea>
+</div>
+<div class="data-area">
+    <h2>Data Out</h2>
+    <textarea class="js-data-out"></textarea>
+</div>
 
 <script src="./../src/json-plus.js"></script>
 <script>
-    var output = JSONPlus.parse(data, filters);
+    function runData() {
+        var textIn     = document.getElementsByClassName( 'js-data-in' )[0],
+            textMiddle = document.getElementsByClassName( 'js-data-middle' )[0],
+            textOut    = document.getElementsByClassName( 'js-data-out' )[0];
+
+        var obj = eval( '(' + textIn.value + ')' );
+
+        var strMiddle = JSONPlus.serialize(obj);
+        textMiddle.value = strMiddle;
+
+        var result = JSONPlus.parse(strMiddle);
+        console.log(result);
+
+        textOut.value = JSON.stringify(result);
+    }
+
+    setTimeout(function() {
+        runData();
+    }, 1);
 </script>

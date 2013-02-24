@@ -1,3 +1,4 @@
+"use static";
 
 /**
  * JSON Plus
@@ -14,8 +15,8 @@
  * use the standard JSON functions. This only
  * exists because they don't offer what I need.
  */
-export module JSONPlus {
-    interface FilterMap {
+module JSONPlus {
+    export interface FilterMap {
         [name: string]: (obj:any) => any;
     }
 
@@ -42,10 +43,14 @@ export module JSONPlus {
      * @param filters An object map of type names to filter functions.
      */
     var applyFilter = function(obj:any, type:string, filters:FilterMap) : bool {
-        var filter = filters[type];
+        if (filters !== undefined) {
+            var filter = filters[type];
 
-        if (filter !== undefined) {
-            return filter(obj);
+            if (filter !== undefined) {
+                return filter(obj);
+            } else {
+                return obj;
+            }
         } else {
             return obj;
         }
@@ -106,7 +111,7 @@ export module JSONPlus {
                     return cached;
                 } else {
                     var index = indexCount.index++;
-                    cached[obj] = index;
+                    seen[obj] = index;
 
                     var type = getType(obj);
                     obj = applyFilter(obj, type, filters);
@@ -186,5 +191,9 @@ export module JSONPlus {
                 objects:objects,
                 structure:structure
         });
+    }
+
+    export function serialize(object: any, filters: FilterMap): string {
+        return stringify(object, filters);
     }
 }
